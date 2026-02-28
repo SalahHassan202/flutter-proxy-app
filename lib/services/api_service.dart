@@ -5,16 +5,28 @@ class ApiService {
     try {
       final response = await http.get(Uri.parse(url));
 
+      final now = DateTime.now();
+
+      final formattedTime =
+          "${now.hour.toString().padLeft(2, '0')}:"
+          "${now.minute.toString().padLeft(2, '0')}:"
+          "${now.second.toString().padLeft(2, '0')}";
+
       if (response.statusCode == 200) {
         return {
           "success": true,
-          "message": "SUCCESS (${DateTime.now().toUtc()})",
+          "message": "SUCCESS at $formattedTime",
+          "statusCode": response.statusCode,
         };
       } else {
-        return {"success": false, "message": "FAILED (${response.statusCode})"};
+        return {
+          "success": false,
+          "message": "FAILED (${response.statusCode}) at $formattedTime",
+          "statusCode": response.statusCode,
+        };
       }
     } catch (e) {
-      return {"success": false, "message": "ERROR ($e)"};
+      return {"success": false, "message": "ERROR: $e"};
     }
   }
 }
